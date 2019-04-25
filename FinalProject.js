@@ -1,59 +1,100 @@
-let img;
-let img2;
-var start = 420;
-var dec = -.25;
+var ghost;
+var bg;
+var frame;
+//the scene is twice the size of the canvas
+var SCENE_W = 1920;
+var SCENE_H = 1332;
 
-function preload(){
-    img = loadImage('Images/Meerkat.png');
-    img2 = loadImage('Images/Global_Map.png');
-    img3 = loadImage('Images/nebula.png');
-    img4 = loadImage('Images/snowleopard.png');
-    img5 = loadImage('Images/03-Fire-png-bottom-to-up.png')
-    img6 = loadImage('Images/buddha.png');
+function setup() {
+  createCanvas(960,666);
+  background(134, 34, 216);
+
+  //create a sprite, and add the 3 animations
+  ghost = createSprite(600, 400, 100, 200);
+
+  var myAnimation = ghost.addAnimation('floating', 'assets/ghost_standing0001.png', 'assets/ghost_standing0002.png', 'assets/ghost_standing0003.png', 'assets/ghost_standing0005.png', 'assets/ghost_standing0007.png');
+  myAnimation.offY = 30;
+
+  ghost.addAnimation('moving', 'assets/ghost_walk0001.png', 'assets/ghost_walk0002.png', 'assets/ghost_walk0003.png', 'assets/ghost_walk0004.png');
+
+  ghost.addAnimation('spinning', 'assets/ghost_spin0001.png', 'assets/ghost_spin0002.png', 'assets/ghost_spin0003.png');
+
+  bg = new Group();
+
+  //create some background for visual reference
+  for(var i=0; i<80; i++)
+  {
+    //create a sprite with 3 animations
+    var dali = createSprite(random(-width, SCENE_W+width), random(-height, SCENE_H+height));
+    dali.addAnimation('normal', 'assets/dali.png');
+    bg.add(dali);
+
+    var qm = createSprite(random(-width, SCENE_W+width), random(-height, SCENE_H+height));
+    qm.addAnimation('normal', 'assets/qm.png');
+    bg.add(qm);
+
+    var blood = createSprite(random(-width, SCENE_W+width), random(-height, SCENE_H+height));
+    blood.addAnimation('normal', 'assets/blood.png');
+    bg.add(blood);
+
+    var eye = createSprite(random(-width, SCENE_W+width), random(-height, SCENE_H+height));
+    eye.addAnimation('normal', 'assets/eye.png');
+    bg.add(eye);
+
+    var snake = createSprite(random(-width, SCENE_W+width), random(-height, SCENE_H+height));
+    snake.addAnimation('normal', 'assets/snake.png');
+    bg.add(snake);
 }
 
-function setup(){
-createCanvas(500,500);
-background(0, 7, 0);
+  frame = loadImage('assets/frame3.png');
 }
 
-function draw(){
-    fill(244, 184, 65);
-image(img, 370, 50, img.width/4, img.height/4);
+function draw() {
+  //mouse trailer, the speed is inversely proportional to the mouse distance
+  ghost.velocity.x = (camera.mouseX-ghost.position.x)/20;
+  ghost.velocity.y = (camera.mouseY-ghost.position.y)/20;
+
+  //a camera is created automatically at the beginning
 
 
-image(img2, 33, 140, img.width/1, img.height/1);
-image(img3, 12, 12, img.width/2, img.height/2);
+  //.5 zoom is zooming out (50% of the normal size)
+  if(mouseIsPressed)
+    camera.zoom = 0.5;
+  else
+    camera.zoom = 1;
 
-image(img4, 340,290, img.width/10,img.height/10);
-image(img4, 300,290, img.width/10,img.height/10);
-image(img4, 260,290, img.width/10,img.height/10);
-image(img4, 220,290, img.width/10,img.height/10);
-image(img4, 180,290, img.width/10,img.height/10);
-image(img4, 140,290, img.width/10,img.height/10);
-image(img4, 100,290, img.width/10,img.height/10);
-image(img4, 60,290, img.width/10,img.height/10);
-//image(img4, 20,290, img.width/10,img.height/10);
-image(img4, 380,290, img.width/10,img.height/10);
-image(img4, 420,290, img.width/10,img.height/10);
-image(img5, 0,370, img.width/.7,img.height/2);
-image(img6, 105,85, img.width/9,img.height/9);
+  //set the camera position to the ghost position
+  camera.position.x = ghost.position.x;
+  camera.position.y = ghost.position.y;
 
-start = start + dec;
-if(start < 10){
-    start = start + 420;
+  //limit the ghost movements
+  if(ghost.position.x < 0)
+    ghost.position.x = 3;
+  if(ghost.position.y < 0)
+    ghost.position.y = 3;
+  if(ghost.position.x > SCENE_W)
+    ghost.position.x = SCENE_W;
+  if(ghost.position.y > SCENE_H)
+    ghost.position.y = SCENE_H;
+
+  //draw the scene
+  drawSprites(bg);
+
+  //shadow using p5 drawing
+  noStroke();
+  fill(0, 0, 0, 20);
+  //shadow
+  ellipse(ghost.position.x, ghost.position.y+90, 80, 30);
+  //character hovering above
+  drawSprite(ghost);
+
+  camera.off();
+  image(frame, 0, 0);
+
+  fill("white");
+  textSize(38);
+  textStyle(BOLDITALIC);
+  text("LOST...", 960, 666);
+
 }
-for(var i = 0; i<5; i++){
-    image(img4, start,290, img.width/10,img.height/10);
-    start = start + dec;
-}
 
-
-}  
-
-
-
-
-/*function preload(){
-    img2 = loadImage('Images/Global_Map.png');
-}*/
