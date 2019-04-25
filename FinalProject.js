@@ -7,7 +7,7 @@ var SCENE_H = 1332;
 
 function setup() {
   createCanvas(960,666);
-  background(134, 34, 216);
+  background(74, 28, 142);
 
   //create a sprite, and add the 3 animations
   ghost = createSprite(600, 400, 100, 200);
@@ -49,13 +49,10 @@ function setup() {
   frame = loadImage('assets/frame3.png');
 }
 
-function draw() {
+ function draw() {
   //mouse trailer, the speed is inversely proportional to the mouse distance
   ghost.velocity.x = (camera.mouseX-ghost.position.x)/20;
   ghost.velocity.y = (camera.mouseY-ghost.position.y)/20;
-
-  //a camera is created automatically at the beginning
-
 
   //.5 zoom is zooming out (50% of the normal size)
   if(mouseIsPressed)
