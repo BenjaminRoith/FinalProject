@@ -46,7 +46,7 @@ function setup() {
     bg.add(snake);
 }
 
-  frame = loadImage('assets/frame3.png');
+  frame = loadImage('Final Project/Assets/frame3.png');
 }
 
  function draw() {
